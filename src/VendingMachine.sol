@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.10;
-
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 
 
@@ -61,16 +61,55 @@ contract Slot {
 /// @notice It enables the user to buy an item from this vending machine, it will add NFT functionality when deployed
 /// @dev Nothing to add for now :)
 
-contract VendingMachine {
-
-    // Item agua = Item('Fiji water', 12);
+contract VendingMachine is Ownable {
     mapping(string => Slot) shelve;
+    mapping (address => uint256) balances;
+
+    event LogDeposit(address accAddress, uint amount);
+    event stockShelve(uint amount, string name);
 
     constructor() {
-        // this should've been done with a for loop but the gas efficiency if this contract was deployed
-        // would be poor, it would be a little bit too expensive to run a double for loop in a constructor
+        
+        /// @notice i tried to do this by creating a nested for loop, but i think this is more gas efficient...
+        shelve['a1'] = new Slot();
+        shelve['a2'] = new Slot();
+        shelve['a3'] = new Slot();
+        shelve['a4'] = new Slot();
+        shelve['b1'] = new Slot();
+        shelve['b2'] = new Slot();
+        shelve['b3'] = new Slot();
+        shelve['b4'] = new Slot();
+        shelve['c1'] = new Slot();
+        shelve['c2'] = new Slot();
+        shelve['c3'] = new Slot();
+        shelve['c4'] = new Slot();
+        shelve['d1'] = new Slot();
+        shelve['d2'] = new Slot();
+        shelve['d3'] = new Slot();
+        shelve['d4'] = new Slot();
 
-        uint public money = 0;
+
     }
+
+    function Deposit(uint _amount) public payable returns (uint){
+        require((balances[msg.sender] + msg.value) >= balances[msg.sender]);
+        balances[msg.sender] += msg.value;
+        emit LogDeposit(msg.sender, _amount);
+        return balances[msg.sender];
+    }
+
+    function stockSlot(string memory _slotId, Item [] memory _products) public OnlyOwner returns(uint256) {
+        // shelve[_slotId].insertProduct();
+        require(_products.lenght > 0, "List of Items can not be empty");
+
+        for (i = 0; i < shelve[_slotId].size; i ++) {
+            shelve[_slotId].insertProduct(_products[i].name,_products[i].price);
+        }
+        emit stockShelve(_products.lenght, _products[0].name);
+        return shelve[_slotId].size;
+
+    }
+
+    /// todo create Buy item function
 
 }
