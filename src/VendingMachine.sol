@@ -68,7 +68,7 @@ contract VendingMachine is Ownable {
     event LogDeposit(address accAddress, uint amount);
     event stockShelve(uint amount, string name);
 
-    constructor() {
+    constructor() Ownable() {
         
         /// @notice i tried to do this by creating a nested for loop, but i think this is more gas efficient...
         shelve['a1'] = new Slot();
@@ -87,6 +87,7 @@ contract VendingMachine is Ownable {
         shelve['d2'] = new Slot();
         shelve['d3'] = new Slot();
         shelve['d4'] = new Slot();
+        
 
 
     }
@@ -98,18 +99,21 @@ contract VendingMachine is Ownable {
         return balances[msg.sender];
     }
 
-    function stockSlot(string memory _slotId, Item [] memory _products) public OnlyOwner returns(uint256) {
-        // shelve[_slotId].insertProduct();
-        require(_products.lenght > 0, "List of Items can not be empty");
+    // function stockSlot(string memory _slotId, Item [] memory _products) public onlyOwner returns(uint256) {
+    //     // shelve[_slotId].insertProduct();
+    //     require(_products.length > 0, "List of Items can not be empty");
 
-        for (i = 0; i < shelve[_slotId].size; i ++) {
-            shelve[_slotId].insertProduct(_products[i].name,_products[i].price);
-        }
-        emit stockShelve(_products.lenght, _products[0].name);
-        return shelve[_slotId].size;
+    //     for (uint i = 0; i < shelve[_slotId].size; i ++) {
+    //         shelve[_slotId].insertProduct(_products[i].name,_products[i].price);
+    //     }
+    //     emit stockShelve(_products.lenght, _products[0].name);
+    //     return shelve[_slotId].size;
 
-    }
+    // }
 
     /// todo create Buy item function
+    // function BuyItem(string memory _slotId) public {
+
+    // }
 
 }
