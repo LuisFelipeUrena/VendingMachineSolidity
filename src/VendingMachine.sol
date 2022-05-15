@@ -67,6 +67,7 @@ contract VendingMachine is Ownable {
 
     event LogDeposit(address accAddress, uint amount);
     event stockShelve(uint amount, string name);
+    event LogBoughtItem(address BuyerAddress, uint price, string ItemName);
 
     constructor() Ownable() {
         
@@ -99,21 +100,26 @@ contract VendingMachine is Ownable {
         return balances[msg.sender];
     }
 
-    // function stockSlot(string memory _slotId, Item [] memory _products) public onlyOwner returns(uint256) {
-    //     // shelve[_slotId].insertProduct();
-    //     require(_products.length > 0, "List of Items can not be empty");
+    function stockSlot(string memory _slotId, Item [] memory _products) public onlyOwner returns(uint256) {
+        // shelve[_slotId].insertProduct();
+        require(_products.length > 0, "List of Items can not be empty");
 
-    //     for (uint i = 0; i < shelve[_slotId].size; i ++) {
-    //         shelve[_slotId].insertProduct(_products[i].name,_products[i].price);
-    //     }
-    //     emit stockShelve(_products.lenght, _products[0].name);
-    //     return shelve[_slotId].size;
+        for (uint i = 0; i < shelve[_slotId].size; i ++) {
+            shelve[_slotId].insertProduct(_products[i].name,_products[i].price);
+        }
+        emit stockShelve(_products.lenght, _products[0].name);
+        return shelve[_slotId].size;
 
-    // }
+    }
 
     /// todo create Buy item function
-    // function BuyItem(string memory _slotId) public {
+    function BuyItem(string memory _slotId) public {
+        require((balances[msg.sender] + msg.value) >= balances[msg.sender]);
+        balances[msg.sender] -= msg.value;
+        emit LogBoughtItem(msg.sender, shelve[_slotId].price, shelve[_slotId].productName);
+        shelve[_slotId].removeProduct();
 
-    // }
+
+    }
 
 }

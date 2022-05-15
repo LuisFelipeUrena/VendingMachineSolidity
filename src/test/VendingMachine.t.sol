@@ -18,6 +18,13 @@ contract VendingMachineTest is DSTest{
         assertTrue(InsertPass);
     }
 
+    function test_remove_item() public {
+        uint currsize = TSlot.size;
+        TSlot.insertProduct('Soda', 22);
+        TSlot.removeProduct();
+        assertEq(Tslot.size, currsize - 1);
+    }
+
 
 }
 
